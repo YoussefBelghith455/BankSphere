@@ -1,0 +1,201 @@
+
+<section class="dashboard">
+
+  <div class="dashboard-header">
+    <div class="header-content">
+      <span class="page-label">OVERVIEW</span>
+      <h1>Your finances<span class="title-accent">.</span></h1>
+      <p>Everything you need, all in one place.</p>
+    </div>
+
+    <div class="header-date">
+      <span>PERSONAL BANKING</span>
+    </div>
+  </div>
+
+  <div class="summary-cards">
+
+    <div class="bank-card">
+
+      <div class="card-top">
+        <div>
+          <h2>BankSphere</h2>
+          <span>PREMIUM DEBIT</span>
+        </div>
+
+        <svg
+          class="contactless"
+          viewBox="0 0 32 32"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M8 12 Q12 16 8 20" />
+          <path d="M13 8 Q21 16 13 24" />
+          <path d="M18 4 Q30 16 18 28" />
+        </svg>
+      </div>
+
+      <div class="card-middle">
+
+        <div class="card-chip">
+          <span></span>
+        </div>
+
+        <svg
+          class="stock-chart"
+          viewBox="0 0 240 80"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <linearGradient
+              id="stockGradient"
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="1"
+            >
+              <stop
+                offset="0%"
+                stop-color="#ff1744"
+                stop-opacity="0.35"
+              />
+              <stop
+                offset="100%"
+                stop-color="#ff1744"
+                stop-opacity="0"
+              />
+            </linearGradient>
+          </defs>
+
+          <path
+            d="M0 67 L24 58 L43 63 L66 43 L86 52 L112 35 L130 41 L153 21 L174 29 L199 9 L218 16 L240 3 L240 80 L0 80 Z"
+            fill="url(#stockGradient)"
+          />
+
+          <path
+            d="M0 67 L24 58 L43 63 L66 43 L86 52 L112 35 L130 41 L153 21 L174 29 L199 9 L218 16 L240 3"
+            fill="none"
+            stroke="#ff1744"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+
+          <circle
+            cx="240"
+            cy="3"
+            r="4"
+            fill="#ff1744"
+          />
+        </svg>
+
+      </div>
+
+      <div class="card-number">
+        •••• •••• •••• 4829
+      </div>
+
+      <div class="card-bottom">
+
+        <div>
+          <small>CARD HOLDER</small>
+          <p>ALEX MORGAN</p>
+        </div>
+
+        <div>
+          <small>EXPIRES</small>
+          <p>08/29</p>
+        </div>
+
+        <div class="card-logo">
+          <span></span>
+          <span></span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="balance-summary">
+
+      <div class="back-top">
+        <span>BANKSPHERE • ACCOUNT OVERVIEW</span>
+      </div>
+
+      <div class="magnetic-stripe"></div>
+
+      <div class="back-content">
+
+        <div class="back-balance">
+          <span class="balance-label">TOTAL BALANCE</span>
+          <h2>
+            {{ totalBalance | currency:'EUR':'symbol':'1.2-2' }}
+          </h2>
+        </div>
+
+        <div class="balance-change">
+          <span
+            [class.positive]="balanceChange > 0"
+            [class.negative]="balanceChange < 0"
+          >
+            {{ balanceChange > 0 ? '↗ +' : balanceChange < 0 ? '↘ ' : '' }}{{ balanceChange }}%
+          </span>
+          <small>vs. last month</small>
+        </div>
+
+        <div class="signature-strip">
+          <span>AUTHORIZED HOLDER</span>
+          <strong>4829</strong>
+        </div>
+
+      </div>
+
+      <div class="back-accent"></div>
+
+    </div>
+
+  </div>
+
+  <div class="transactions-section">
+
+    <div class="transactions-header">
+      <div>
+        <h2>Recent Transactions</h2>
+        <p>Your latest account activity</p>
+      </div>
+
+      <a href="#" class="view-all">View all →</a>
+    </div>
+
+    
+<div class="transactions-list">
+  @for (transaction of transactions; track transaction.id) {
+    <div class="transaction-item">
+      <div class="transaction-icon">
+        {{ transaction.icon }}
+      </div>
+
+      <div class="transaction-info">
+        <h3>{{ transaction.name }}</h3>
+        <p>{{ transaction.date }}</p>
+      </div>
+
+      <span
+        class="transaction-amount"
+        [class.income]="transaction.amount > 0"
+        [class.expense]="transaction.amount < 0"
+      >
+        {{ transaction.amount > 0 ? '+' : '-' }}{{ (transaction.amount < 0 ? -transaction.amount : transaction.amount) | currency:'EUR':'symbol':'1.2-2' }}
+      </span>
+    </div>
+  } @empty {
+    <div class="transactions-empty">
+      <h3>No transactions yet</h3>
+      <p>Your account activity will appear here once you make your first transaction.</p>
+    </div>
+  }
+</div>
+
+
+  </div>
+
+</section>

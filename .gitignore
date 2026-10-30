@@ -1,0 +1,15 @@
+node_modules/
+.angular/
+dist/
+coverage/
+target/
+
+.env
+.env.*
+!.env.example
+
+.vscode/
+.idea/
+*.log
+.DS_Store
+.git-backup/
