@@ -1,0 +1,204 @@
+
+<section class="accounts-page">
+  <header class="accounts-header">
+    <span class="eyebrow">YOUR BANKING</span>
+    <h1>My Accounts.</h1>
+    <p>Your money, all in one place.</p>
+  </header>
+
+  <section class="balance-overview">
+    <div class="balance-overview-top">
+      <span>TOTAL BALANCE</span>
+      <span class="brand-label">BANKSPHERE</span>
+    </div>
+
+    <h2>{{ totalBalance | currency:'EUR' }}</h2>
+
+    <div class="balance-accent"></div>
+
+    <p>Across {{ accounts.length }} accounts</p>
+  </section>
+
+  <section class="accounts-section">
+    <div class="accounts-section-header">
+      <h2>Your accounts</h2>
+      <span>{{ accounts.length }} accounts</span>
+    </div>
+
+    <div class="accounts-list">
+      @for (account of accounts; track account.id) {
+        <article class="account-row">
+          <button
+            type="button"
+            class="account-toggle"
+            (click)="toggleAccount(account.id)"
+            [attr.aria-expanded]="expandedAccountIds.has(account.id)"
+          >
+            <div class="account-card-top">
+              <span class="account-icon">
+                @if (account.type === 'checking') {
+                  <span aria-hidden="true">▣</span>
+                } @else {
+                  <span aria-hidden="true">◆</span>
+                }
+              </span>
+
+              <span class="expand-icon">
+                {{ expandedAccountIds.has(account.id) ? '−' : '+' }}
+              </span>
+            </div>
+
+            <div class="account-info">
+              <div class="account-name-row">
+                <h3>{{ account.name }}</h3>
+
+                <span
+                  class="account-status"
+                  [class.status-active]="account.status === 'active'"
+                  [class.status-inactive]="account.status === 'inactive'"
+                  [class.status-frozen]="account.status === 'frozen'"
+                >
+                  <span class="status-dot"></span>
+                  {{ account.status }}
+                </span>
+              </div>
+
+              <span class="account-amount">
+                {{ account.balance | currency:account.currency }}
+              </span>
+            </div>
+
+            <div class="account-card-footer">
+              <span>
+                {{ account.type === 'checking'
+                  ? 'Everyday banking'
+                  : 'Your savings' }}
+              </span>
+
+              <span>
+                {{ expandedAccountIds.has(account.id)
+                  ? 'Hide details'
+                  : 'View details' }}
+              </span>
+            </div>
+          </button>
+
+          @if (expandedAccountIds.has(account.id)) {
+            <div class="account-expanded">
+              <div class="account-detail">
+                <span>Account type</span>
+                <strong>{{ account.type }}</strong>
+              </div>
+
+              <div class="account-detail">
+                <span>Currency</span>
+                <strong>{{ account.currency }}</strong>
+              </div>
+
+              <div class="account-detail iban-detail">
+                <span>IBAN</span>
+
+                <div class="iban-content">
+                  <strong>{{ account.iban }}</strong>
+
+                  <button
+                    type="button"
+                    class="copy-iban-btn"
+                    (click)="copyIban(account.id, account.iban)"
+                    [attr.aria-label]="'Copy IBAN for ' + account.name"
+                  >
+                    {{ copiedAccountId === account.id ? '✓ Copied!' : 'Copy IBAN' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </article>
+      } @empty {
+        <p>No accounts available.</p>
+      }
+    </div>
+  </section>
+
+  <section class="distribution-section">
+    <div class="distribution-header">
+      <h2>Balance Distribution</h2>
+      <p>How your money is distributed across accounts.</p>
+    </div>
+
+    <div class="distribution-card">
+      @if (accounts.length === 2 && totalBalance > 0) {
+        <div
+          class="distribution-donut"
+          [style.background]="
+            'conic-gradient(#c4163c 0% ' +
+            getAccountPercentage(accounts[0].balance) +
+            '%, #25252b ' +
+            getAccountPercentage(accounts[0].balance) +
+            '% 100%)'
+          "
+          (mousemove)="onDonutMouseMove($event)"
+          (mouseleave)="onDonutMouseLeave()"
+          role="img"
+          [attr.aria-label]="
+            'Checking ' +
+            getAccountPercentage(accounts[0].balance).toFixed(1) +
+            ' percent, Savings ' +
+            getAccountPercentage(accounts[1].balance).toFixed(1) +
+            ' percent'
+          "
+        >
+          <div class="donut-center">
+            <span>Total Balance</span>
+            <strong>{{ totalBalance | currency:'EUR' }}</strong>
+          </div>
+
+          @if (hoveredAccount) {
+            <div class="donut-tooltip">
+              <strong>{{ hoveredAccount.name }}</strong>
+
+              <span class="tooltip-balance">
+                {{ hoveredAccount.balance | currency:hoveredAccount.currency }}
+              </span>
+
+              <span class="tooltip-percentage">
+                {{ getAccountPercentage(hoveredAccount.balance).toFixed(1) }}%
+                of total balance
+              </span>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="distribution-empty">
+          Distribution chart available for two accounts with a positive total balance.
+        </div>
+      }
+
+      <div class="distribution-legend">
+        @for (account of accounts; track account.id) {
+          <div class="legend-item">
+            <div class="legend-account">
+              <span
+                class="legend-dot"
+                [class.checking-dot]="account.type === 'checking'"
+                [class.savings-dot]="account.type === 'savings'"
+              ></span>
+
+              <span>{{ account.name }}</span>
+            </div>
+
+            <strong>
+              {{ getAccountPercentage(account.balance).toFixed(1) }}%
+            </strong>
+
+            <span class="legend-balance">
+              {{ account.balance | currency:account.currency }}
+            </span>
+          </div>
+        } @empty {
+          <p>No accounts available.</p>
+        }
+      </div>
+    </div>
+  </section>
+</section>
