@@ -1,0 +1,258 @@
+
+<section class="transfers-page">
+  <header class="transfers-header">
+    <span class="eyebrow">YOUR BANKING</span>
+    <h1>New Transfer.</h1>
+    <p>Move money securely and easily.</p>
+  </header>
+
+  <div class="transfer-layout">
+    <form
+      class="transfer-card"
+      [formGroup]="transferForm"
+      (ngSubmit)="submitTransfer()"
+    >
+      <div class="card-heading">
+        <h2>Transfer Details</h2>
+        <p>Enter the information below to prepare your transfer.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="sourceAccount">From account</label>
+
+        <select
+          id="sourceAccount"
+          formControlName="sourceAccountId"
+        >
+          @for (account of accounts; track account.id) {
+            <option [value]="account.id">
+              {{ account.name }} —
+              {{ account.balance | currency:'EUR' }}
+            </option>
+          }
+        </select>
+
+        <span class="field-hint">
+          Available balance:
+          {{ (selectedAccount?.balance ?? 0) | currency:'EUR' }}
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="recipientName">Recipient name</label>
+
+        <input
+          id="recipientName"
+          type="text"
+          formControlName="recipientName"
+          placeholder="Full name of recipient"
+        />
+
+        @if (
+          transferForm.controls.recipientName.touched &&
+          transferForm.controls.recipientName.invalid
+        ) {
+          <span class="field-error">
+            Recipient name is required.
+          </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="recipientIban">Recipient IBAN</label>
+
+        <input
+          id="recipientIban"
+          type="text"
+          formControlName="recipientIban"
+          placeholder="PT50000000000000000000000"
+        />
+
+        @if (
+          transferForm.controls.recipientIban.touched &&
+          transferForm.controls.recipientIban.invalid
+        ) {
+          <span class="field-error">
+            Enter a valid IBAN without spaces.
+          </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="amount">Amount</label>
+
+        <div class="amount-input">
+          <span>€</span>
+
+          <input
+            id="amount"
+            type="number"
+            formControlName="amount"
+            placeholder="0.00"
+            min="0.01"
+            step="0.01"
+          />
+
+          <span>EUR</span>
+        </div>
+
+        @if (
+          transferForm.controls.amount.touched &&
+          transferForm.controls.amount.invalid
+        ) {
+          <span class="field-error">
+            Enter an amount greater than zero.
+          </span>
+        }
+
+        @if (hasInsufficientBalance) {
+          <span class="field-error">
+            Insufficient balance in the selected account.
+          </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description (optional)</label>
+
+        <textarea
+          id="description"
+          formControlName="description"
+          placeholder="What is this transfer for?"
+          rows="3"
+          maxlength="140"
+        ></textarea>
+      </div>
+
+      <button type="submit" class="primary-button">
+        Review Transfer
+      </button>
+    </form>
+
+    <aside class="transfer-summary">
+      <div class="summary-heading">
+        <span>TRANSFER OVERVIEW</span>
+        <h2>Your transfer</h2>
+      </div>
+
+      <div class="summary-row">
+        <span>From</span>
+        <strong>
+          {{ selectedAccount?.name ?? 'Select an account' }}
+        </strong>
+      </div>
+
+      <div class="summary-row">
+        <span>Recipient</span>
+        <strong>
+          {{
+            transferForm.controls.recipientName.value ||
+            'Not specified'
+          }}
+        </strong>
+      </div>
+
+      <div class="summary-row">
+        <span>Amount</span>
+        <strong>
+          {{
+            (transferForm.controls.amount.value ?? 0)
+              | currency:'EUR'
+          }}
+        </strong>
+      </div>
+
+      <div class="summary-divider"></div>
+
+      <div class="summary-total">
+        <span>Total transfer</span>
+        <strong>
+          {{
+            (transferForm.controls.amount.value ?? 0)
+              | currency:'EUR'
+          }}
+        </strong>
+      </div>
+
+      <p class="summary-note">
+        This is a demonstration. No real money will be transferred.
+      </p>
+    </aside>
+  </div>
+</section>
+
+@if (showSuccessModal) {
+  <div class="modal-overlay">
+    <div
+      class="success-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="successTitle"
+      aria-describedby="successDescription"
+    >
+      <div class="success-animation">
+        <svg
+          class="success-checkmark"
+          viewBox="0 0 100 100"
+          aria-hidden="true"
+        >
+          <circle
+            class="checkmark-circle"
+            cx="50"
+            cy="50"
+            r="46"
+          />
+
+          <path
+            class="checkmark-tick"
+            d="M28 51 L43 66 L73 35"
+          />
+        </svg>
+      </div>
+
+      <div class="success-content">
+        <span class="success-label">TRANSFER CONFIRMED</span>
+
+        <h2 id="successTitle">
+          Transfer Successful!
+        </h2>
+
+        <p id="successDescription">
+          Your simulated transfer has been completed successfully.
+        </p>
+
+        <div class="success-details">
+          <div class="detail-row">
+            <span>Recipient</span>
+            <strong>
+              {{ transferForm.controls.recipientName.value }}
+            </strong>
+          </div>
+
+          <div class="detail-row">
+            <span>From</span>
+            <strong>{{ selectedAccount?.name }}</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Amount</span>
+            <strong class="success-amount">
+              {{
+                (transferForm.controls.amount.value ?? 0)
+                  | currency:'EUR'
+              }}
+            </strong>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="primary-button done-button"
+          (click)="closeSuccessModal()"
+        >
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+}
