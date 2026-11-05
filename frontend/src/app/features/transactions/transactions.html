@@ -1,0 +1,263 @@
+
+<section class="transactions-page">
+  <header class="transactions-header">
+    <div>
+      <span class="eyebrow">YOUR BANKING</span>
+      <h1>Transactions.</h1>
+      <p>Track and manage your financial activity.</p>
+    </div>
+  </header>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <span class="summary-label">Total Income</span>
+      <h2 class="income-value">
+        {{ totalIncome | currency:'EUR' }}
+      </h2>
+      <span class="summary-caption">Completed incoming transactions</span>
+    </div>
+
+    <div class="summary-card">
+      <span class="summary-label">Total Expenses</span>
+      <h2 class="expense-value">
+        {{ totalExpenses | currency:'EUR' }}
+      </h2>
+      <span class="summary-caption">Completed outgoing transactions</span>
+    </div>
+
+    <div class="summary-card dark-card">
+      <span class="summary-label">Net Balance</span>
+      <h2>
+        {{ netBalance | currency:'EUR' }}
+      </h2>
+      <span class="summary-caption">Income minus expenses</span>
+    </div>
+  </div>
+
+  <div class="transactions-panel">
+    <div class="panel-heading">
+      <div>
+        <h2>Transaction History</h2>
+        <p>View and filter your recent transactions.</p>
+      </div>
+
+      <span class="transaction-count">
+        {{ filteredTransactions.length }} transactions
+      </span>
+    </div>
+
+    <div class="filters-section">
+      <div class="search-field">
+        <label for="transactionSearch">Search transactions</label>
+        <input
+          id="transactionSearch"
+          type="search"
+          placeholder="Search by name, category or account..."
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onFilterChange()"
+        />
+      </div>
+
+      <div class="filter-grid">
+        <div class="filter-field">
+          <label for="typeFilter">Type</label>
+          <select
+            id="typeFilter"
+            [(ngModel)]="selectedType"
+            (ngModelChange)="onFilterChange()"
+          >
+            <option value="All">All Types</option>
+            <option value="Income">Income</option>
+            <option value="Expense">Expense</option>
+            <option value="Transfer">Transfer</option>
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label for="statusFilter">Status</label>
+          <select
+            id="statusFilter"
+            [(ngModel)]="selectedStatus"
+            (ngModelChange)="onFilterChange()"
+          >
+            <option value="All">All Statuses</option>
+            <option value="Completed">Completed</option>
+            <option value="Pending">Pending</option>
+            <option value="Failed">Failed</option>
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label for="dateFilter">Date</label>
+          <input
+            id="dateFilter"
+            type="date"
+            [(ngModel)]="selectedDate"
+            (ngModelChange)="onFilterChange()"
+          />
+        </div>
+
+        <div class="filter-action">
+          <button
+            type="button"
+            class="clear-button"
+            (click)="clearFilters()"
+          >
+            Clear Filters
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="transactions-table">
+        <thead>
+          <tr>
+            <th>Transaction</th>
+            <th>Date</th>
+            <th>Account</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th class="amount-column">Amount</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (
+            transaction of paginatedTransactions;
+            track transaction.id
+          ) {
+            <tr>
+              <td>
+                <div class="transaction-info">
+                  <div
+                    class="transaction-icon"
+                    [class.income-icon]="transaction.type === 'Income'"
+                    [class.expense-icon]="transaction.type === 'Expense'"
+                    [class.transfer-icon]="transaction.type === 'Transfer'"
+                  >
+                    @switch (transaction.type) {
+                      @case ('Income') {
+                        <span>↓</span>
+                      }
+                      @case ('Expense') {
+                        <span>↑</span>
+                      }
+                      @case ('Transfer') {
+                        <span>↗</span>
+                      }
+                    }
+                  </div>
+
+                  <div class="transaction-name">
+                    <strong>{{ transaction.name }}</strong>
+                    <span>{{ transaction.category }}</span>
+                  </div>
+                </div>
+              </td>
+
+              <td class="date-cell">
+                {{ transaction.date | date:'dd MMM yyyy' }}
+              </td>
+
+              <td class="account-cell">
+                {{ transaction.account }}
+              </td>
+
+              <td>
+                <span
+                  class="type-badge"
+                  [class.type-income]="transaction.type === 'Income'"
+                  [class.type-expense]="transaction.type === 'Expense'"
+                  [class.type-transfer]="transaction.type === 'Transfer'"
+                >
+                  {{ transaction.type }}
+                </span>
+              </td>
+
+              <td>
+                <span
+                  class="status-badge"
+                  [class.status-completed]="transaction.status === 'Completed'"
+                  [class.status-pending]="transaction.status === 'Pending'"
+                  [class.status-failed]="transaction.status === 'Failed'"
+                >
+                  <span class="status-dot"></span>
+                  {{ transaction.status }}
+                </span>
+              </td>
+
+              <td
+                class="amount-cell"
+                [class.positive-amount]="transaction.amount > 0"
+                [class.negative-amount]="transaction.amount < 0"
+              >
+                {{ transaction.amount > 0 ? '+' : '' }}
+                {{ transaction.amount | currency:'EUR' }}
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty-state">
+                <div class="empty-content">
+                  <h3>No transactions found</h3>
+                  <p>Try adjusting your search or filters.</p>
+
+                  <button
+                    type="button"
+                    class="clear-button"
+                    (click)="clearFilters()"
+                  >
+                    Reset Filters
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination">
+      <span class="pagination-info">
+        @if (filteredTransactions.length > 0) {
+          Showing
+          {{ (currentPage - 1) * pageSize + 1 }}
+          –
+          {{
+            currentPage * pageSize < filteredTransactions.length
+              ? currentPage * pageSize
+              : filteredTransactions.length
+          }}
+          of {{ filteredTransactions.length }}
+        } @else {
+          Showing 0 transactions
+        }
+      </span>
+
+      <div class="pagination-controls">
+        <button
+          type="button"
+          class="page-button"
+          [disabled]="currentPage === 1"
+          (click)="previousPage()"
+        >
+          Previous
+        </button>
+
+        <span class="page-indicator">
+          {{ currentPage }} / {{ totalPages }}
+        </span>
+
+        <button
+          type="button"
+          class="page-button"
+          [disabled]="currentPage === totalPages"
+          (click)="nextPage()"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
