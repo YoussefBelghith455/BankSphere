@@ -128,7 +128,7 @@
         <div class="back-balance">
           <span class="balance-label">TOTAL BALANCE</span>
           <h2>
-            {{ totalBalance | currency:'EUR':'symbol':'1.2-2' }}
+            {{ totalBalance() | currency:'EUR':'symbol':'1.2-2' }}
           </h2>
         </div>
 
@@ -163,38 +163,40 @@
         <p>Your latest account activity</p>
       </div>
 
-      <a href="#" class="view-all">View all →</a>
+      <a routerLink="/transactions" class="view-all">
+        View all →
+      </a>
     </div>
 
-    
-<div class="transactions-list">
-  @for (transaction of transactions; track transaction.id) {
-    <div class="transaction-item">
-      <div class="transaction-icon">
-        {{ transaction.icon }}
-      </div>
+    <div class="transactions-list">
+      @for (transaction of transactions(); track transaction.id) {
+        <div class="transaction-item">
 
-      <div class="transaction-info">
-        <h3>{{ transaction.name }}</h3>
-        <p>{{ transaction.date }}</p>
-      </div>
+          <div class="transaction-icon">
+            {{ transaction.icon }}
+          </div>
 
-      <span
-        class="transaction-amount"
-        [class.income]="transaction.amount > 0"
-        [class.expense]="transaction.amount < 0"
-      >
-        {{ transaction.amount > 0 ? '+' : '-' }}{{ (transaction.amount < 0 ? -transaction.amount : transaction.amount) | currency:'EUR':'symbol':'1.2-2' }}
-      </span>
+          <div class="transaction-info">
+            <h3>{{ transaction.name }}</h3>
+            <p>{{ transaction.date }}</p>
+          </div>
+
+          <span
+            class="transaction-amount"
+            [class.income]="transaction.amount > 0"
+            [class.expense]="transaction.amount < 0"
+          >
+            {{ transaction.amount > 0 ? '+' : '-' }}{{ (transaction.amount < 0 ? -transaction.amount : transaction.amount) | currency:'EUR':'symbol':'1.2-2' }}
+          </span>
+
+        </div>
+      } @empty {
+        <div class="transactions-empty">
+          <h3>No transactions yet</h3>
+          <p>Your account activity will appear here once you make your first transaction.</p>
+        </div>
+      }
     </div>
-  } @empty {
-    <div class="transactions-empty">
-      <h3>No transactions yet</h3>
-      <p>Your account activity will appear here once you make your first transaction.</p>
-    </div>
-  }
-</div>
-
 
   </div>
 

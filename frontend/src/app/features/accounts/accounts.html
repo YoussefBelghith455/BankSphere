@@ -12,21 +12,21 @@
       <span class="brand-label">BANKSPHERE</span>
     </div>
 
-    <h2>{{ totalBalance | currency:'EUR' }}</h2>
+    <h2>{{ totalBalance() | currency:'EUR' }}</h2>
 
     <div class="balance-accent"></div>
 
-    <p>Across {{ accounts.length }} accounts</p>
+    <p>Across {{ accounts().length }} accounts</p>
   </section>
 
   <section class="accounts-section">
     <div class="accounts-section-header">
       <h2>Your accounts</h2>
-      <span>{{ accounts.length }} accounts</span>
+      <span>{{ accounts().length }} accounts</span>
     </div>
 
     <div class="accounts-list">
-      @for (account of accounts; track account.id) {
+      @for (account of accounts(); track account.id) {
         <article class="account-row">
           <button
             type="button"
@@ -127,14 +127,14 @@
     </div>
 
     <div class="distribution-card">
-      @if (accounts.length === 2 && totalBalance > 0) {
+      @if (accounts().length === 2 && totalBalance() > 0) {
         <div
           class="distribution-donut"
           [style.background]="
             'conic-gradient(#c4163c 0% ' +
-            getAccountPercentage(accounts[0].balance) +
+            getAccountPercentage(accounts()[0].balance) +
             '%, #25252b ' +
-            getAccountPercentage(accounts[0].balance) +
+            getAccountPercentage(accounts()[0].balance) +
             '% 100%)'
           "
           (mousemove)="onDonutMouseMove($event)"
@@ -142,15 +142,15 @@
           role="img"
           [attr.aria-label]="
             'Checking ' +
-            getAccountPercentage(accounts[0].balance).toFixed(1) +
+            getAccountPercentage(accounts()[0].balance).toFixed(1) +
             ' percent, Savings ' +
-            getAccountPercentage(accounts[1].balance).toFixed(1) +
+            getAccountPercentage(accounts()[1].balance).toFixed(1) +
             ' percent'
           "
         >
           <div class="donut-center">
             <span>Total Balance</span>
-            <strong>{{ totalBalance | currency:'EUR' }}</strong>
+            <strong>{{ totalBalance() | currency:'EUR' }}</strong>
           </div>
 
           @if (hoveredAccount) {
@@ -175,7 +175,7 @@
       }
 
       <div class="distribution-legend">
-        @for (account of accounts; track account.id) {
+        @for (account of accounts(); track account.id) {
           <div class="legend-item">
             <div class="legend-account">
               <span

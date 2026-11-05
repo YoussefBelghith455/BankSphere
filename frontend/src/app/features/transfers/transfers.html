@@ -24,7 +24,7 @@
           id="sourceAccount"
           formControlName="sourceAccountId"
         >
-          @for (account of accounts; track account.id) {
+          @for (account of accounts(); track account.id) {
             <option [value]="account.id">
               {{ account.name }} —
               {{ account.balance | currency:'EUR' }}
@@ -124,8 +124,14 @@
         ></textarea>
       </div>
 
+      @if (transferError) {
+        <p class="field-error" role="alert">
+          {{ transferError }}
+        </p>
+      }
+
       <button type="submit" class="primary-button">
-        Review Transfer
+        Validate Transfer
       </button>
     </form>
 
@@ -211,7 +217,9 @@
       </div>
 
       <div class="success-content">
-        <span class="success-label">TRANSFER CONFIRMED</span>
+        <span class="success-label">
+          TRANSFER CONFIRMED
+        </span>
 
         <h2 id="successTitle">
           Transfer Successful!
@@ -231,7 +239,9 @@
 
           <div class="detail-row">
             <span>From</span>
-            <strong>{{ selectedAccount?.name }}</strong>
+            <strong>
+              {{ selectedAccount?.name }}
+            </strong>
           </div>
 
           <div class="detail-row">

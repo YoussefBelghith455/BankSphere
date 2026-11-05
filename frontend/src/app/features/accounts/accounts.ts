@@ -1,16 +1,7 @@
 
-import { Component } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
-
-interface BankAccount {
-  id: number;
-  name: string;
-  type: 'checking' | 'savings';
-  iban: string;
-  balance: number;
-  currency: string;
-  status: 'active' | 'inactive' | 'frozen';
-}
+import { Component, inject } from '@angular/core';
+import { Banking, BankAccount } from '../../core/services/banking';
 
 @Component({
   selector: 'app-accounts',
@@ -19,46 +10,31 @@ interface BankAccount {
   styleUrl: './accounts.scss'
 })
 export class Accounts {
-  accounts: BankAccount[] = [
-    {
-      id: 1,
-      name: 'Checking Account',
-      type: 'checking',
-      iban: 'PT50 0000 0000 0000 0000 0000 0',
-      balance: 8450,
-      currency: 'EUR',
-      status: 'active'
-    },
-    {
-      id: 2,
-      name: 'Savings Account',
-      type: 'savings',
-      iban: 'PT50 1111 1111 1111 1111 1111 1',
-      balance: 4000,
-      currency: 'EUR',
-      status: 'active'
-    }
-  ];
+  private readonly banking = inject(Banking);
+
+  readonly accounts = this.banking.accounts;
+  readonly totalBalance = this.banking.totalBalance;
 
   expandedAccountIds = new Set<number>();
 
   copiedAccountId: number | null = null;
 
-  hoveredAccount: BankAccount | null = null;
+  hoveredAccountId: number | null = null;
 
-  get totalBalance(): number {
-    return this.accounts.reduce(
-      (total, account) => total + account.balance,
-      0
-    );
+  get hoveredAccount(): BankAccount | null {
+    return this.accounts().find(
+      account => account.id === this.hoveredAccountId
+    ) ?? null;
   }
 
   getAccountPercentage(balance: number): number {
-    if (this.totalBalance <= 0) {
+    const total = this.totalBalance();
+
+    if (total <= 0) {
       return 0;
     }
 
-    return (balance / this.totalBalance) * 100;
+    return (balance / total) * 100;
   }
 
   toggleAccount(accountId: number): void {
@@ -79,8 +55,10 @@ export class Accounts {
   }
 
   onDonutMouseMove(event: MouseEvent): void {
-    if (this.accounts.length !== 2 || this.totalBalance <= 0) {
-      this.hoveredAccount = null;
+    const accounts = this.accounts();
+
+    if (accounts.length !== 2 || this.totalBalance() <= 0) {
+      this.hoveredAccountId = null;
       return;
     }
 
@@ -98,22 +76,22 @@ export class Accounts {
     const innerRadius = outerRadius * 0.75;
 
     if (distance < innerRadius || distance > outerRadius) {
-      this.hoveredAccount = null;
+      this.hoveredAccountId = null;
       return;
     }
 
     const angle = (Math.atan2(y, x) * 180 / Math.PI + 450) % 360;
 
     const checkingAngle =
-      this.getAccountPercentage(this.accounts[0].balance) * 3.6;
+      this.getAccountPercentage(accounts[0].balance) * 3.6;
 
-    this.hoveredAccount =
+    this.hoveredAccountId =
       angle < checkingAngle
-        ? this.accounts[0]
-        : this.accounts[1];
+        ? accounts[0].id
+        : accounts[1].id;
   }
 
   onDonutMouseLeave(): void {
-    this.hoveredAccount = null;
+    this.hoveredAccountId = null;
   }
 }

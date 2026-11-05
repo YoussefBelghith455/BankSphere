@@ -1,39 +1,61 @@
-import { Component } from '@angular/core';
+
 import { CurrencyPipe } from '@angular/common';
+import { Component, computed, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { Banking } from '../../core/services/banking';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, RouterLink],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
 export class Dashboard {
-  totalBalance = 12450.00;
-  balanceChange = 4.8;
+  private readonly banking = inject(Banking);
 
-  
-transactions = [
-  {
-    id: 1,
-    name: 'Grocery Shopping',
-    date: 'Oct 29, 2026',
-    amount: -85.50,
-    icon: '🛒'
-  },
-  {
-    id: 2,
-    name: 'Salary Payment',
-    date: 'Oct 28, 2026',
-    amount: 2850.00,
-    icon: '💼'
-  },
-  {
-    id: 3,
-    name: 'Coffee Shop',
-    date: 'Oct 27, 2026',
-    amount: -6.80,
-    icon: '☕'
+  readonly totalBalance = this.banking.totalBalance;
+
+  readonly balanceChange = 4.8;
+
+  readonly transactions = computed(() =>
+    this.banking.transactions().slice(0, 3).map(transaction => ({
+      id: transaction.id,
+      name: transaction.name,
+      date: new Date(
+        transaction.date + 'T12:00:00'
+      ).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+      }),
+      amount: transaction.amount,
+      icon: this.getTransactionIcon(transaction.category)
+    }))
+  );
+
+  private getTransactionIcon(category: string): string {
+    const value = category.toLowerCase();
+
+    if (value.includes('grocery') || value.includes('shopping')) {
+      return '🛒';
+    }
+
+    if (value.includes('salary') || value.includes('work')) {
+      return '💼';
+    }
+
+    if (value.includes('restaurant') || value.includes('food')) {
+      return '🍽️';
+    }
+
+    if (value.includes('transfer')) {
+      return '💸';
+    }
+
+    if (value.includes('subscription') || value.includes('netflix')) {
+      return '📺';
+    }
+
+    return '💳';
   }
-];
-
 }

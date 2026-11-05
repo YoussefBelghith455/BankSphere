@@ -1,18 +1,12 @@
 
 import { CurrencyPipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   FormBuilder,
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-
-interface TransferAccount {
-  id: number;
-  name: string;
-  iban: string;
-  balance: number;
-}
+import { Banking } from '../../core/services/banking';
 
 @Component({
   selector: 'app-transfers',
@@ -21,24 +15,13 @@ interface TransferAccount {
   styleUrl: './transfers.scss'
 })
 export class Transfers {
-  accounts: TransferAccount[] = [
-    {
-      id: 1,
-      name: 'Checking Account',
-      iban: 'PT50 0000 0000 0000 0000 0000 0',
-      balance: 8450
-    },
-    {
-      id: 2,
-      name: 'Savings Account',
-      iban: 'PT50 1111 1111 1111 1111 1111 1',
-      balance: 4000
-    }
-  ];
+  private readonly banking = inject(Banking);
+  private readonly formBuilder = inject(FormBuilder);
+
+  readonly accounts = this.banking.accounts;
 
   showSuccessModal = false;
-
-  private formBuilder = new FormBuilder();
+  transferError = '';
 
   transferForm = this.formBuilder.group({
     sourceAccountId: [1, Validators.required],
@@ -60,12 +43,12 @@ export class Transfers {
     description: ['', Validators.maxLength(140)]
   });
 
-  get selectedAccount(): TransferAccount | undefined {
+  get selectedAccount() {
     const accountId = Number(
       this.transferForm.controls.sourceAccountId.value
     );
 
-    return this.accounts.find(
+    return this.accounts().find(
       account => account.id === accountId
     );
   }
@@ -81,6 +64,7 @@ export class Transfers {
 
   submitTransfer(): void {
     this.transferForm.markAllAsTouched();
+    this.transferError = '';
 
     if (
       this.transferForm.invalid ||
@@ -89,7 +73,24 @@ export class Transfers {
       return;
     }
 
-    this.showSuccessModal = true;
+    const form = this.transferForm.getRawValue();
+
+    try {
+      this.banking.transfer({
+        sourceAccountId: Number(form.sourceAccountId),
+        recipientName: form.recipientName ?? '',
+        recipientIban: form.recipientIban ?? '',
+        amount: Number(form.amount),
+        description: form.description ?? ''
+      });
+
+      this.showSuccessModal = true;
+    } catch (error) {
+      this.transferError =
+        error instanceof Error
+          ? error.message
+          : 'Unable to complete the transfer.';
+    }
   }
 
   closeSuccessModal(): void {
@@ -105,5 +106,7 @@ export class Transfers {
       amount: null,
       description: ''
     });
+
+    this.transferError = '';
   }
 }
