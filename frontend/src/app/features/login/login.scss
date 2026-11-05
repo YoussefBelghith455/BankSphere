@@ -1,0 +1,408 @@
+
+:host {
+  display: block;
+  min-height: 100dvh;
+}
+
+.login-page {
+  display: grid;
+  grid-template-columns: 48% 52%;
+  min-height: 100dvh;
+  font-family: inherit;
+}
+
+.login-brand-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  padding: 48px 64px;
+  background: #19191e;
+  color: #fff;
+}
+
+.brand-logo,
+.mobile-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.brand-symbol {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: #c4163c;
+  color: #fff;
+  font-size: 21px;
+}
+
+.brand-dot,
+.heading-dot {
+  color: #c4163c;
+}
+
+.brand-content {
+  position: relative;
+  z-index: 1;
+  max-width: 500px;
+  padding: 50px 0;
+}
+
+.brand-eyebrow,
+.form-eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  color: #e72c55;
+}
+
+.brand-content h1 {
+  margin: 24px 0;
+  font-size: clamp(42px, 4.5vw, 76px);
+  line-height: 1.08;
+  letter-spacing: -3px;
+  font-weight: 800;
+}
+
+.brand-content h1 span {
+  display: block;
+  color: #e72c55;
+}
+
+.brand-content p {
+  max-width: 390px;
+  color: #a9a9b3;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.brand-decoration {
+  position: absolute;
+  z-index: -1;
+  inset: -100px -180px -100px -100px;
+  pointer-events: none;
+}
+
+.decoration-circle {
+  position: absolute;
+  border: 1px solid rgba(231, 44, 85, 0.2);
+  border-radius: 50%;
+}
+
+.circle-one {
+  width: 380px;
+  height: 380px;
+  right: -100px;
+  top: 0;
+}
+
+.circle-two {
+  width: 560px;
+  height: 560px;
+  right: -180px;
+  top: -90px;
+}
+
+.circle-three {
+  width: 740px;
+  height: 740px;
+  right: -270px;
+  top: -180px;
+}
+
+.brand-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: #898994;
+  font-size: 12px;
+}
+
+.login-form-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 56px 48px;
+  background: #f7f7f9;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 430px;
+}
+
+.mobile-brand {
+  display: none;
+}
+
+.form-heading {
+  margin-bottom: 38px;
+}
+
+.form-heading h2 {
+  margin: 12px 0;
+  font-size: clamp(40px, 4vw, 56px);
+  font-weight: 800;
+  letter-spacing: -2px;
+  color: #1d1d23;
+}
+
+.form-heading p {
+  margin: 0;
+  color: #85858e;
+  font-size: 14px;
+}
+
+.form-field {
+  margin-bottom: 24px;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #292932;
+}
+
+.form-field input {
+  width: 100%;
+  height: 54px;
+  box-sizing: border-box;
+  padding: 0 16px;
+  border: 1px solid #e1e1e7;
+  border-radius: 11px;
+  outline: none;
+  background: #fff;
+  color: #202028;
+  font: inherit;
+  font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-field input:focus {
+  border-color: #c4163c;
+  box-shadow: 0 0 0 3px rgba(196, 22, 60, 0.1);
+}
+
+.form-field input.input-error {
+  border-color: #dc3545;
+}
+
+.form-field input::placeholder {
+  color: #aaaab4;
+}
+
+.field-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.forgot-password {
+  margin-bottom: 10px;
+  color: #c4163c;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.password-input {
+  position: relative;
+}
+
+.password-input input {
+  padding-right: 78px;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  color: #c4163c;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.field-error {
+  display: block;
+  margin-top: 7px;
+  color: #c4163c;
+  font-size: 12px;
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 0 28px;
+}
+
+.remember-me {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #656570;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.remember-me input {
+  width: 16px;
+  height: 16px;
+  accent-color: #c4163c;
+  cursor: pointer;
+}
+
+.submit-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 56px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 11px;
+  background: #c4163c;
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.submit-button:hover {
+  background: #a91132;
+  transform: translateY(-2px);
+}
+
+.submit-button:active {
+  transform: translateY(0);
+}
+
+.submit-button:focus-visible,
+.password-toggle:focus-visible,
+.register-prompt a:focus-visible {
+  outline: 3px solid rgba(196, 22, 60, 0.45);
+  outline-offset: 3px;
+}
+
+.submit-button span {
+  font-size: 22px;
+}
+
+.form-notice {
+  margin-top: 16px;
+  padding: 13px;
+  border-radius: 9px;
+  background: #fff1f3;
+  color: #9b1733;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.register-prompt {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 32px;
+  font-size: 13px;
+  color: #777781;
+}
+
+.register-prompt a {
+  color: #c4163c;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.register-prompt a:hover {
+  text-decoration: underline;
+}
+
+.form-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 65px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e5e9;
+  color: #9999a2;
+  font-size: 11px;
+}
+
+@media (max-width: 1100px) {
+  .login-brand-panel {
+    padding: 40px;
+  }
+
+  .login-form-panel {
+    padding: 40px 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .login-page {
+    display: block;
+  }
+
+  .login-brand-panel {
+    display: none;
+  }
+
+  .login-form-panel {
+    min-height: 100dvh;
+    box-sizing: border-box;
+    padding: 35px 24px;
+    align-items: flex-start;
+  }
+
+  .form-container {
+    max-width: 440px;
+  }
+
+  .mobile-brand {
+    display: flex;
+    margin-bottom: 65px;
+    color: #1d1d23;
+  }
+
+  .form-heading h2 {
+    font-size: 44px;
+  }
+
+  .form-footer {
+    margin-top: 48px;
+  }
+}
+
+@media (max-width: 380px) {
+  .login-form-panel {
+    padding: 28px 18px;
+  }
+
+  .form-footer {
+    flex-direction: column;
+  }
+  .forgot-password {
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+}

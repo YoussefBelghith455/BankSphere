@@ -1,11 +1,18 @@
 
 <section class="dashboard">
-
   <div class="dashboard-header">
     <div class="header-content">
-      <span class="page-label">OVERVIEW</span>
-      <h1>Your finances<span class="title-accent">.</span></h1>
-      <p>Everything you need, all in one place.</p>
+      <span class="page-label">
+        {{ translation.translate('common.yourBanking') }}
+      </span>
+
+      <h1>
+        {{ translation.translate('dashboard.title') }}
+      </h1>
+
+      <p>
+        {{ translation.translate('dashboard.subtitle') }}
+      </p>
     </div>
 
     <div class="header-date">
@@ -14,9 +21,7 @@
   </div>
 
   <div class="summary-cards">
-
     <div class="bank-card">
-
       <div class="card-top">
         <div>
           <h2>BankSphere</h2>
@@ -35,7 +40,6 @@
       </div>
 
       <div class="card-middle">
-
         <div class="card-chip">
           <span></span>
         </div>
@@ -87,7 +91,6 @@
             fill="#ff1744"
           />
         </svg>
-
       </div>
 
       <div class="card-number">
@@ -95,7 +98,6 @@
       </div>
 
       <div class="card-bottom">
-
         <div>
           <small>CARD HOLDER</small>
           <p>ALEX MORGAN</p>
@@ -110,13 +112,10 @@
           <span></span>
           <span></span>
         </div>
-
       </div>
-
     </div>
 
     <div class="balance-summary">
-
       <div class="back-top">
         <span>BANKSPHERE • ACCOUNT OVERVIEW</span>
       </div>
@@ -124,11 +123,13 @@
       <div class="magnetic-stripe"></div>
 
       <div class="back-content">
-
         <div class="back-balance">
-          <span class="balance-label">TOTAL BALANCE</span>
+          <span class="balance-label">
+            {{ translation.translate('common.totalBalance') }}
+          </span>
+
           <h2>
-            {{ totalBalance() | currency:'EUR':'symbol':'1.2-2' }}
+            {{ currency.format(totalBalance()) }}
           </h2>
         </div>
 
@@ -139,6 +140,7 @@
           >
             {{ balanceChange > 0 ? '↗ +' : balanceChange < 0 ? '↘ ' : '' }}{{ balanceChange }}%
           </span>
+
           <small>vs. last month</small>
         </div>
 
@@ -146,32 +148,32 @@
           <span>AUTHORIZED HOLDER</span>
           <strong>4829</strong>
         </div>
-
       </div>
 
       <div class="back-accent"></div>
-
     </div>
-
   </div>
 
   <div class="transactions-section">
-
     <div class="transactions-header">
       <div>
-        <h2>Recent Transactions</h2>
-        <p>Your latest account activity</p>
+        <h2>
+          {{ translation.translate('dashboard.recentTransactions') }}
+        </h2>
+
+        <p>
+          {{ translation.translate('dashboard.latestActivity') }}
+        </p>
       </div>
 
       <a routerLink="/transactions" class="view-all">
-        View all →
+        {{ translation.translate('dashboard.viewAll') }} →
       </a>
     </div>
 
     <div class="transactions-list">
       @for (transaction of transactions(); track transaction.id) {
         <div class="transaction-item">
-
           <div class="transaction-icon">
             {{ transaction.icon }}
           </div>
@@ -186,18 +188,18 @@
             [class.income]="transaction.amount > 0"
             [class.expense]="transaction.amount < 0"
           >
-            {{ transaction.amount > 0 ? '+' : '-' }}{{ (transaction.amount < 0 ? -transaction.amount : transaction.amount) | currency:'EUR':'symbol':'1.2-2' }}
+            {{ transaction.amount > 0 ? '+' : '-' }}{{ currency.format(transaction.amount < 0 ? -transaction.amount : transaction.amount) }}
           </span>
-
         </div>
       } @empty {
         <div class="transactions-empty">
           <h3>No transactions yet</h3>
-          <p>Your account activity will appear here once you make your first transaction.</p>
+          <p>
+            Your account activity will appear here once you make
+            your first transaction.
+          </p>
         </div>
       }
     </div>
-
   </div>
-
 </section>

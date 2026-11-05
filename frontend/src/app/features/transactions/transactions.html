@@ -2,57 +2,72 @@
 <section class="transactions-page">
   <header class="transactions-header">
     <div>
-      <span class="eyebrow">YOUR BANKING</span>
-      <h1>Transactions.</h1>
-      <p>Track and manage your financial activity.</p>
+      <span class="eyebrow">
+        {{ translation.translate('common.yourBanking') }}
+      </span>
+      <h1>{{ translation.translate('transactions.title') }}</h1>
+      <p>{{ translation.translate('transactions.subtitle') }}</p>
     </div>
   </header>
 
   <div class="summary-grid">
     <div class="summary-card">
-      <span class="summary-label">Total Income</span>
+      <span class="summary-label">
+        {{ translation.translate('transactions.totalIncome') }}
+      </span>
       <h2 class="income-value">
-        {{ totalIncome | currency:'EUR' }}
+        {{ currency.format(totalIncome) }}
       </h2>
-      <span class="summary-caption">Completed incoming transactions</span>
+      <span class="summary-caption">
+        {{ translation.translate('transactions.incomeCaption') }}
+      </span>
     </div>
 
     <div class="summary-card">
-      <span class="summary-label">Total Expenses</span>
+      <span class="summary-label">
+        {{ translation.translate('transactions.totalExpenses') }}
+      </span>
       <h2 class="expense-value">
-        {{ totalExpenses | currency:'EUR' }}
+        {{ currency.format(totalExpenses) }}
       </h2>
-      <span class="summary-caption">Completed outgoing transactions</span>
+      <span class="summary-caption">
+        {{ translation.translate('transactions.expensesCaption') }}
+      </span>
     </div>
 
     <div class="summary-card dark-card">
-      <span class="summary-label">Net Balance</span>
-      <h2>
-        {{ netBalance | currency:'EUR' }}
-      </h2>
-      <span class="summary-caption">Income minus expenses</span>
+      <span class="summary-label">
+        {{ translation.translate('transactions.netBalance') }}
+      </span>
+      <h2>{{ currency.format(netBalance) }}</h2>
+      <span class="summary-caption">
+        {{ translation.translate('transactions.netCaption') }}
+      </span>
     </div>
   </div>
 
   <div class="transactions-panel">
     <div class="panel-heading">
       <div>
-        <h2>Transaction History</h2>
-        <p>View and filter your recent transactions.</p>
+        <h2>{{ translation.translate('transactions.history') }}</h2>
+        <p>{{ translation.translate('transactions.historySubtitle') }}</p>
       </div>
 
       <span class="transaction-count">
-        {{ filteredTransactions.length }} transactions
+        {{ filteredTransactions.length }}
+        {{ translation.translate('transactions.count') }}
       </span>
     </div>
 
     <div class="filters-section">
       <div class="search-field">
-        <label for="transactionSearch">Search transactions</label>
+        <label for="transactionSearch">
+          {{ translation.translate('transactions.search') }}
+        </label>
         <input
           id="transactionSearch"
           type="search"
-          placeholder="Search by name, category or account..."
+          [placeholder]="translation.translate('transactions.searchPlaceholder')"
           [(ngModel)]="searchTerm"
           (ngModelChange)="onFilterChange()"
         />
@@ -60,35 +75,57 @@
 
       <div class="filter-grid">
         <div class="filter-field">
-          <label for="typeFilter">Type</label>
+          <label for="typeFilter">
+            {{ translation.translate('common.type') }}
+          </label>
           <select
             id="typeFilter"
             [(ngModel)]="selectedType"
             (ngModelChange)="onFilterChange()"
           >
-            <option value="All">All Types</option>
-            <option value="Income">Income</option>
-            <option value="Expense">Expense</option>
-            <option value="Transfer">Transfer</option>
+            <option value="All">
+              {{ translation.translate('transactions.allTypes') }}
+            </option>
+            <option value="Income">
+              {{ translation.translate('transactions.income') }}
+            </option>
+            <option value="Expense">
+              {{ translation.translate('transactions.expense') }}
+            </option>
+            <option value="Transfer">
+              {{ translation.translate('transactions.transfer') }}
+            </option>
           </select>
         </div>
 
         <div class="filter-field">
-          <label for="statusFilter">Status</label>
+          <label for="statusFilter">
+            {{ translation.translate('common.status') }}
+          </label>
           <select
             id="statusFilter"
             [(ngModel)]="selectedStatus"
             (ngModelChange)="onFilterChange()"
           >
-            <option value="All">All Statuses</option>
-            <option value="Completed">Completed</option>
-            <option value="Pending">Pending</option>
-            <option value="Failed">Failed</option>
+            <option value="All">
+              {{ translation.translate('transactions.allStatuses') }}
+            </option>
+            <option value="Completed">
+              {{ translation.translate('transactions.completed') }}
+            </option>
+            <option value="Pending">
+              {{ translation.translate('transactions.pending') }}
+            </option>
+            <option value="Failed">
+              {{ translation.translate('transactions.failed') }}
+            </option>
           </select>
         </div>
 
         <div class="filter-field">
-          <label for="dateFilter">Date</label>
+          <label for="dateFilter">
+            {{ translation.translate('common.date') }}
+          </label>
           <input
             id="dateFilter"
             type="date"
@@ -103,7 +140,7 @@
             class="clear-button"
             (click)="clearFilters()"
           >
-            Clear Filters
+            {{ translation.translate('transactions.clearFilters') }}
           </button>
         </div>
       </div>
@@ -113,12 +150,14 @@
       <table class="transactions-table">
         <thead>
           <tr>
-            <th>Transaction</th>
-            <th>Date</th>
-            <th>Account</th>
-            <th>Type</th>
-            <th>Status</th>
-            <th class="amount-column">Amount</th>
+            <th>{{ translation.translate('transactions.transaction') }}</th>
+            <th>{{ translation.translate('common.date') }}</th>
+            <th>{{ translation.translate('common.account') }}</th>
+            <th>{{ translation.translate('common.type') }}</th>
+            <th>{{ translation.translate('common.status') }}</th>
+            <th class="amount-column">
+              {{ translation.translate('common.amount') }}
+            </th>
           </tr>
         </thead>
 
@@ -157,7 +196,7 @@
               </td>
 
               <td class="date-cell">
-                {{ transaction.date | date:'dd MMM yyyy' }}
+                {{ formatDate(transaction.date) }}
               </td>
 
               <td class="account-cell">
@@ -171,7 +210,7 @@
                   [class.type-expense]="transaction.type === 'Expense'"
                   [class.type-transfer]="transaction.type === 'Transfer'"
                 >
-                  {{ transaction.type }}
+                  {{ getTransactionType(transaction.type) }}
                 </span>
               </td>
 
@@ -183,7 +222,7 @@
                   [class.status-failed]="transaction.status === 'Failed'"
                 >
                   <span class="status-dot"></span>
-                  {{ transaction.status }}
+                  {{ getTransactionStatus(transaction.status) }}
                 </span>
               </td>
 
@@ -192,23 +231,22 @@
                 [class.positive-amount]="transaction.amount > 0"
                 [class.negative-amount]="transaction.amount < 0"
               >
-                {{ transaction.amount > 0 ? '+' : '' }}
-                {{ transaction.amount | currency:'EUR' }}
+                {{ transaction.amount > 0 ? '+' : '' }}{{ currency.format(transaction.amount) }}
               </td>
             </tr>
           } @empty {
             <tr>
               <td colspan="6" class="empty-state">
                 <div class="empty-content">
-                  <h3>No transactions found</h3>
-                  <p>Try adjusting your search or filters.</p>
+                  <h3>{{ translation.translate('transactions.noResults') }}</h3>
+                  <p>{{ translation.translate('transactions.tryAdjusting') }}</p>
 
                   <button
                     type="button"
                     class="clear-button"
                     (click)="clearFilters()"
                   >
-                    Reset Filters
+                    {{ translation.translate('transactions.resetFilters') }}
                   </button>
                 </div>
               </td>
@@ -221,7 +259,7 @@
     <div class="pagination">
       <span class="pagination-info">
         @if (filteredTransactions.length > 0) {
-          Showing
+          {{ translation.translate('transactions.showing') }}
           {{ (currentPage - 1) * pageSize + 1 }}
           –
           {{
@@ -229,9 +267,12 @@
               ? currentPage * pageSize
               : filteredTransactions.length
           }}
-          of {{ filteredTransactions.length }}
+          {{ translation.translate('transactions.of') }}
+          {{ filteredTransactions.length }}
         } @else {
-          Showing 0 transactions
+          {{ translation.translate('transactions.showing') }}
+          0
+          {{ translation.translate('transactions.count') }}
         }
       </span>
 
@@ -242,7 +283,7 @@
           [disabled]="currentPage === 1"
           (click)="previousPage()"
         >
-          Previous
+          {{ translation.translate('transactions.previous') }}
         </button>
 
         <span class="page-indicator">
@@ -255,7 +296,7 @@
           [disabled]="currentPage === totalPages"
           (click)="nextPage()"
         >
-          Next
+          {{ translation.translate('transactions.next') }}
         </button>
       </div>
     </div>

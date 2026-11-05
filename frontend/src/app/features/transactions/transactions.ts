@@ -1,21 +1,24 @@
 
-import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   Banking,
   BankTransaction
 } from '../../core/services/banking';
+import { Currency } from '../../core/services/currency';
+import { Translation } from '../../core/services/translation';
 
 @Component({
   selector: 'app-transactions',
-  imports: [CurrencyPipe, DatePipe, FormsModule],
+  imports: [FormsModule],
   templateUrl: './transactions.html',
   styleUrl: './transactions.scss'
 })
 export class Transactions {
   private readonly banking = inject(Banking);
 
+  readonly currency = inject(Currency);
+  readonly translation = inject(Translation);
   readonly transactions = this.banking.transactions;
 
   searchTerm = '';
@@ -99,6 +102,47 @@ export class Transactions {
 
   get netBalance(): number {
     return this.totalIncome - this.totalExpenses;
+  }
+
+  getTransactionType(type: string): string {
+    switch (type) {
+      case 'Income':
+        return this.translation.translate('transactions.income');
+      case 'Expense':
+        return this.translation.translate('transactions.expense');
+      case 'Transfer':
+        return this.translation.translate('transactions.transfer');
+      default:
+        return type;
+    }
+  }
+
+  getTransactionStatus(status: string): string {
+    switch (status) {
+      case 'Completed':
+        return this.translation.translate('transactions.completed');
+      case 'Pending':
+        return this.translation.translate('transactions.pending');
+      case 'Failed':
+        return this.translation.translate('transactions.failed');
+      default:
+        return status;
+    }
+  }
+
+  formatDate(date: string): string {
+    const locale = {
+      en: 'en-US',
+      fr: 'fr-FR',
+      pt: 'pt-PT',
+      ar: 'ar-TN'
+    }[this.translation.language()];
+
+    return new Date(date + 'T12:00:00').toLocaleDateString(locale, {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
   }
 
   onFilterChange(): void {

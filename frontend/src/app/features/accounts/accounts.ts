@@ -1,16 +1,20 @@
 
-import { CurrencyPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Banking, BankAccount } from '../../core/services/banking';
+import { Currency } from '../../core/services/currency';
+import { Translation } from '../../core/services/translation';
 
 @Component({
   selector: 'app-accounts',
-  imports: [CurrencyPipe],
+  imports: [],
   templateUrl: './accounts.html',
   styleUrl: './accounts.scss'
 })
 export class Accounts {
   private readonly banking = inject(Banking);
+
+  readonly currency = inject(Currency);
+  readonly translation = inject(Translation);
 
   readonly accounts = this.banking.accounts;
   readonly totalBalance = this.banking.totalBalance;

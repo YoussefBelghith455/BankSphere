@@ -1,5 +1,4 @@
 
-import { CurrencyPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import {
   FormBuilder,
@@ -7,10 +6,12 @@ import {
   Validators
 } from '@angular/forms';
 import { Banking } from '../../core/services/banking';
+import { Currency } from '../../core/services/currency';
+import { Translation } from '../../core/services/translation';
 
 @Component({
   selector: 'app-transfers',
-  imports: [CurrencyPipe, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './transfers.html',
   styleUrl: './transfers.scss'
 })
@@ -18,10 +19,17 @@ export class Transfers {
   private readonly banking = inject(Banking);
   private readonly formBuilder = inject(FormBuilder);
 
+  readonly currency = inject(Currency);
+  readonly translation = inject(Translation);
   readonly accounts = this.banking.accounts;
 
   showSuccessModal = false;
   transferError = '';
+
+  private confirmedTransferAmount = 0;
+  private confirmedTransferCurrency = '';
+  private confirmedRecipientName = '';
+  private confirmedSourceAccountName = '';
 
   transferForm = this.formBuilder.group({
     sourceAccountId: [1, Validators.required],
@@ -53,13 +61,54 @@ export class Transfers {
     );
   }
 
-  get hasInsufficientBalance(): boolean {
-    const amount = Number(
+  get transferAmount(): number {
+    return Number(
       this.transferForm.controls.amount.value
-    );
+    ) || 0;
+  }
 
-    return amount > 0 &&
-      amount > (this.selectedAccount?.balance ?? 0);
+  get transferAmountInEur(): number {
+    const rate = this.currency.exchangeRate();
+
+    if (rate <= 0) {
+      return 0;
+    }
+
+    return this.transferAmount / rate;
+  }
+
+  get hasInsufficientBalance(): boolean {
+    return this.transferAmountInEur > 0 &&
+      this.transferAmountInEur >
+        (this.selectedAccount?.balance ?? 0);
+  }
+
+  get formattedTransferAmount(): string {
+    return this.currency.format(this.transferAmountInEur);
+  }
+
+  get formattedConfirmedAmount(): string {
+    const locale = {
+      en: 'en-US',
+      fr: 'fr-FR',
+      pt: 'pt-PT',
+      ar: 'ar-TN'
+    }[this.translation.language()];
+
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: this.confirmedTransferCurrency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(this.confirmedTransferAmount);
+  }
+
+  get confirmedRecipient(): string {
+    return this.confirmedRecipientName;
+  }
+
+  get confirmedSourceAccount(): string {
+    return this.confirmedSourceAccountName;
   }
 
   submitTransfer(): void {
@@ -75,21 +124,32 @@ export class Transfers {
 
     const form = this.transferForm.getRawValue();
 
+    const amountInEur = this.transferAmountInEur;
+    const amountInSelectedCurrency = this.transferAmount;
+    const selectedCurrency = this.currency.selectedCurrency();
+    const recipientName = form.recipientName ?? '';
+    const sourceAccountName = this.selectedAccount?.name ?? '';
+
     try {
       this.banking.transfer({
         sourceAccountId: Number(form.sourceAccountId),
-        recipientName: form.recipientName ?? '',
+        recipientName,
         recipientIban: form.recipientIban ?? '',
-        amount: Number(form.amount),
+        amount: amountInEur,
         description: form.description ?? ''
       });
+
+      this.confirmedTransferAmount = amountInSelectedCurrency;
+      this.confirmedTransferCurrency = selectedCurrency;
+      this.confirmedRecipientName = recipientName;
+      this.confirmedSourceAccountName = sourceAccountName;
 
       this.showSuccessModal = true;
     } catch (error) {
       this.transferError =
         error instanceof Error
           ? error.message
-          : 'Unable to complete the transfer.';
+          : this.translation.translate('transfers.unableToComplete');
     }
   }
 

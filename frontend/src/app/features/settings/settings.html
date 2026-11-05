@@ -1,0 +1,212 @@
+
+<section class="settings-page">
+  <header class="settings-header">
+    <div>
+      <span class="page-eyebrow">
+        {{ translation.translate('settings.eyebrow') }}
+      </span>
+
+      <h1>
+        {{ translation.translate('settings.title') }}
+        <span class="accent-dot">.</span>
+      </h1>
+
+      <p>{{ translation.translate('settings.subtitle') }}</p>
+    </div>
+  </header>
+
+  <div class="settings-content">
+    <section class="settings-card">
+      <div class="section-heading">
+        <div class="section-icon">👤</div>
+        <div>
+          <h2>{{ translation.translate('settings.personalInfo') }}</h2>
+          <p>{{ translation.translate('settings.profileSubtitle') }}</p>
+        </div>
+      </div>
+
+      <div class="profile-overview">
+        <div class="profile-avatar">JD</div>
+
+        <div class="profile-details">
+          <strong>John Doe</strong>
+          <span>john.doe@example.com</span>
+          <span class="demo-label">
+            {{ translation.translate('settings.demoAccount') }}
+          </span>
+        </div>
+      </div>
+
+      <div class="settings-note">
+        {{ translation.translate('settings.profileNote') }}
+      </div>
+    </section>
+
+    <section class="settings-card">
+      <div class="section-heading">
+        <div class="section-icon">🔒</div>
+        <div>
+          <h2>{{ translation.translate('settings.security') }}</h2>
+          <p>{{ translation.translate('settings.securitySubtitle') }}</p>
+        </div>
+      </div>
+
+      <div class="settings-item">
+        <div class="item-description">
+          <strong>{{ translation.translate('settings.password') }}</strong>
+          <span>{{ translation.translate('settings.passwordNote') }}</span>
+        </div>
+
+        <span class="status-tag">
+          {{ translation.translate('settings.comingSoon') }}
+        </span>
+      </div>
+
+      <div class="settings-item">
+        <div class="item-description">
+          <strong>{{ translation.translate('settings.twoFactor') }}</strong>
+          <span>{{ translation.translate('settings.twoFactorNote') }}</span>
+        </div>
+
+        <span class="status-tag">
+          {{ translation.translate('settings.comingSoon') }}
+        </span>
+      </div>
+    </section>
+
+    <section class="settings-card">
+      <div class="section-heading">
+        <div class="section-icon">⚙️</div>
+        <div>
+          <h2>{{ translation.translate('settings.preferences') }}</h2>
+          <p>{{ translation.translate('settings.preferencesSubtitle') }}</p>
+        </div>
+      </div>
+
+      <div class="settings-item">
+        <div class="item-description">
+          <strong>{{ translation.translate('settings.language') }}</strong>
+          <span>{{ translation.translate('settings.languageNote') }}</span>
+        </div>
+
+        <select
+          [attr.aria-label]="translation.translate('settings.language')"
+          class="settings-select"
+          [ngModel]="selectedLanguage()"
+          (ngModelChange)="updateLanguage($event)"
+        >
+          <option value="en">English</option>
+          <option value="fr">Français</option>
+          <option value="pt">Português</option>
+          <option value="ar">العربية</option>
+        </select>
+      </div>
+
+      <div class="settings-item">
+        <div class="item-description">
+          <strong>{{ translation.translate('settings.preferredCurrency') }}</strong>
+          <span>{{ translation.translate('settings.currencyNote') }}</span>
+        </div>
+
+        <select
+          [attr.aria-label]="translation.translate('settings.preferredCurrency')"
+          class="settings-select"
+          [ngModel]="selectedCurrency()"
+          (ngModelChange)="updateCurrency($event)"
+        >
+          <option value="EUR">EUR — Euro</option>
+          <option value="USD">USD — US Dollar</option>
+          <option value="GBP">GBP — British Pound</option>
+          <option value="TND">TND — Tunisian Dinar</option>
+        </select>
+      </div>
+
+      <div class="settings-note">
+        {{ translation.translate('settings.preferencesNote') }}
+      </div>
+    </section>
+
+    <section class="settings-card">
+      <div class="section-heading">
+        <div class="section-icon">🔔</div>
+        <div>
+          <h2>{{ translation.translate('settings.notifications') }}</h2>
+          <p>{{ translation.translate('settings.notificationsSubtitle') }}</p>
+        </div>
+      </div>
+
+      <div class="settings-item">
+        <div class="item-description">
+          <strong>{{ translation.translate('settings.appNotifications') }}</strong>
+          <span>{{ translation.translate('settings.appNotificationsNote') }}</span>
+        </div>
+
+        <label class="toggle-switch">
+          <input
+            type="checkbox"
+            [attr.aria-label]="translation.translate('settings.appNotifications')"
+            [ngModel]="notificationsEnabled()"
+            (ngModelChange)="updateNotifications($event)"
+          />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="settings-item">
+        <div class="item-description">
+          <strong>{{ translation.translate('settings.emailAlerts') }}</strong>
+          <span>{{ translation.translate('settings.emailAlertsNote') }}</span>
+        </div>
+
+        <label class="toggle-switch">
+          <input
+            type="checkbox"
+            [attr.aria-label]="translation.translate('settings.emailAlerts')"
+            [ngModel]="emailAlertsEnabled()"
+            (ngModelChange)="updateEmailAlerts($event)"
+          />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="settings-note">
+        {{ translation.translate('settings.notificationsNote') }}
+      </div>
+    </section>
+
+    <section class="settings-card account-access-card">
+      <div class="section-heading">
+        <div class="section-icon">🚪</div>
+        <div>
+          <h2>{{ translation.translate('settings.accountAccess') }}</h2>
+          <p>{{ translation.translate('settings.accountAccessSubtitle') }}</p>
+        </div>
+      </div>
+
+      <div class="signout-content">
+        <div class="item-description">
+          <strong>{{ translation.translate('settings.signOutTitle') }}</strong>
+          <span>{{ translation.translate('settings.signOutSubtitle') }}</span>
+        </div>
+
+        <button
+          type="button"
+          class="signout-button"
+          (click)="signOut()"
+        >
+          <span aria-hidden="true">↪</span>
+          {{ translation.translate('settings.signOut') }}
+        </button>
+      </div>
+
+      <div class="settings-note">
+        {{ translation.translate('settings.signOutNote') }}
+      </div>
+    </section>
+  </div>
+
+  <footer class="settings-footer">
+    <span>BankSphere © 2026</span>
+    <span>{{ translation.translate('settings.footer') }}</span>
+  </footer>
+</section>

@@ -1,0 +1,221 @@
+
+<section class="register-page">
+  <div class="register-brand-panel">
+    <div class="brand-logo">
+      <span class="brand-symbol">◆</span>
+      <span>BankSphere<span class="brand-dot">.</span></span>
+    </div>
+
+    <div class="brand-content">
+      <span class="brand-eyebrow">BANKING WITHOUT BORDERS</span>
+
+      <h1>
+        A new chapter.
+        <span>Starts here.</span>
+      </h1>
+
+      <p>
+        Join a smarter banking experience designed for a connected world.
+        Manage your finances with clarity, confidence, and simplicity.
+      </p>
+
+      <div class="brand-decoration">
+        <div class="decoration-circle circle-one"></div>
+        <div class="decoration-circle circle-two"></div>
+        <div class="decoration-circle circle-three"></div>
+      </div>
+    </div>
+
+    <div class="brand-footer">
+      <span>© 2026 BankSphere</span>
+      <span>Built for what's next.</span>
+    </div>
+  </div>
+
+  <div class="register-form-panel">
+    <div class="form-container">
+      <div class="mobile-brand">
+        <span class="brand-symbol">◆</span>
+        <span>BankSphere<span class="brand-dot">.</span></span>
+      </div>
+
+      <div class="form-heading">
+        <span class="form-eyebrow">GET STARTED</span>
+        <h2>Create account<span class="heading-dot">.</span></h2>
+        <p>Enter your details to join BankSphere.</p>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="submit()" novalidate>
+        <div class="name-fields">
+          <div class="form-field">
+            <label for="register-first-name">First name</label>
+
+            <input
+              id="register-first-name"
+              type="text"
+              formControlName="firstName"
+              placeholder="John"
+              autocomplete="given-name"
+              [class.input-error]="registerForm.controls.firstName.invalid && registerForm.controls.firstName.touched"
+            />
+
+            @if (registerForm.controls.firstName.touched && registerForm.controls.firstName.hasError('required')) {
+              <span class="field-error">First name is required.</span>
+            } @else if (registerForm.controls.firstName.touched && registerForm.controls.firstName.hasError('minlength')) {
+              <span class="field-error">Enter at least 2 characters.</span>
+            }
+          </div>
+
+          <div class="form-field">
+            <label for="register-last-name">Last name</label>
+
+            <input
+              id="register-last-name"
+              type="text"
+              formControlName="lastName"
+              placeholder="Doe"
+              autocomplete="family-name"
+              [class.input-error]="registerForm.controls.lastName.invalid && registerForm.controls.lastName.touched"
+            />
+
+            @if (registerForm.controls.lastName.touched && registerForm.controls.lastName.hasError('required')) {
+              <span class="field-error">Last name is required.</span>
+            } @else if (registerForm.controls.lastName.touched && registerForm.controls.lastName.hasError('minlength')) {
+              <span class="field-error">Enter at least 2 characters.</span>
+            }
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="register-email">Email address</label>
+
+          <input
+            id="register-email"
+            type="email"
+            formControlName="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            [class.input-error]="registerForm.controls.email.invalid && registerForm.controls.email.touched"
+          />
+
+          @if (registerForm.controls.email.touched && registerForm.controls.email.hasError('required')) {
+            <span class="field-error">Email address is required.</span>
+          } @else if (registerForm.controls.email.touched && registerForm.controls.email.hasError('email')) {
+            <span class="field-error">Please enter a valid email address.</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="register-password">Password</label>
+
+          <div class="password-input">
+            <input
+              id="register-password"
+              [type]="showPassword() ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="Create a password"
+              autocomplete="new-password"
+              [class.input-error]="registerForm.controls.password.invalid && registerForm.controls.password.touched"
+            />
+
+            <button
+              type="button"
+              class="password-toggle"
+              (click)="togglePassword()"
+              [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+            >
+              {{ showPassword() ? 'Hide' : 'Show' }}
+            </button>
+          </div>
+
+          @if (registerForm.controls.password.touched && registerForm.controls.password.hasError('required')) {
+            <span class="field-error">Password is required.</span>
+          } @else if (registerForm.controls.password.touched && registerForm.controls.password.hasError('minlength')) {
+            <span class="field-error">Password must contain at least 8 characters.</span>
+          } @else if (registerForm.controls.password.touched && registerForm.controls.password.hasError('pattern')) {
+            <span class="field-error">
+              Include uppercase, lowercase, and a number.
+            </span>
+          }
+
+          <span class="field-hint">
+            Minimum 8 characters, with uppercase, lowercase, and a number.
+          </span>
+        </div>
+
+        <div class="form-field">
+          <label for="register-confirm-password">Confirm password</label>
+
+          <div class="password-input">
+            <input
+              id="register-confirm-password"
+              [type]="showConfirmPassword() ? 'text' : 'password'"
+              formControlName="confirmPassword"
+              placeholder="Confirm your password"
+              autocomplete="new-password"
+              [class.input-error]="registerForm.controls.confirmPassword.touched && (registerForm.controls.confirmPassword.invalid || registerForm.hasError('passwordMismatch'))"
+            />
+
+            <button
+              type="button"
+              class="password-toggle"
+              (click)="toggleConfirmPassword()"
+              [attr.aria-label]="showConfirmPassword() ? 'Hide password' : 'Show password'"
+            >
+              {{ showConfirmPassword() ? 'Hide' : 'Show' }}
+            </button>
+          </div>
+
+          @if (registerForm.controls.confirmPassword.touched && registerForm.controls.confirmPassword.hasError('required')) {
+            <span class="field-error">Please confirm your password.</span>
+          } @else if (registerForm.controls.confirmPassword.touched && registerForm.hasError('passwordMismatch')) {
+            <span class="field-error">Passwords do not match.</span>
+          }
+        </div>
+
+        <div class="terms-field">
+          <label class="terms-label">
+            <input type="checkbox" formControlName="acceptTerms" />
+            <span>
+              I agree to the Terms of Service and Privacy Policy
+              of the BankSphere demo platform.
+            </span>
+          </label>
+
+          @if (registerForm.controls.acceptTerms.touched && registerForm.controls.acceptTerms.hasError('required')) {
+            <span class="field-error">You must accept the terms to continue.</span>
+          }
+        </div>
+
+        <button type="submit" class="submit-button">
+          Create account
+          <span aria-hidden="true">→</span>
+        </button>
+
+        @if (submitted()) {
+          <div class="form-notice" role="status">
+            <span class="notice-icon" aria-hidden="true">ⓘ</span>
+
+            <div>
+              <strong>Registration is coming soon.</strong>
+              <p>
+                Your form is valid. Account creation will become available
+                when the secure backend is connected. No account has been created.
+              </p>
+            </div>
+          </div>
+        }
+      </form>
+
+      <div class="login-prompt">
+        <span>Already have an account?</span>
+        <a routerLink="/login">Sign in</a>
+      </div>
+
+      <div class="form-footer">
+        <span>BankSphere demo platform</span>
+        <span>Built for what's next.</span>
+      </div>
+    </div>
+  </div>
+</section>

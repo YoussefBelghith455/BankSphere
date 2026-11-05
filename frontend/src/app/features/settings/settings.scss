@@ -1,0 +1,391 @@
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.settings-page {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 36px 32px 48px;
+  box-sizing: border-box;
+  color: #202028;
+}
+
+.settings-header {
+  margin-bottom: 32px;
+
+  .page-eyebrow {
+    color: #c4163c;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+  }
+
+  h1 {
+    margin: 10px 0 8px;
+    font-size: clamp(32px, 4vw, 44px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+  }
+
+  p {
+    margin: 0;
+    color: #898994;
+    font-size: 14px;
+  }
+}
+
+.accent-dot {
+  color: #c4163c;
+}
+
+.settings-content {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.settings-card {
+  padding: 28px 30px;
+  border: 1px solid #e9e9ed;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 5px 25px rgba(25, 25, 30, 0.035);
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 25px;
+
+  h2 {
+    margin: 0 0 5px;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+  }
+
+  p {
+    margin: 0;
+    color: #92929b;
+    font-size: 12px;
+  }
+}
+
+.section-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 13px;
+  background: #fff0f3;
+  font-size: 21px;
+}
+
+.profile-overview {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px;
+  border: 1px solid #f0f0f3;
+  border-radius: 13px;
+  background: #fafafb;
+}
+
+.profile-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  border-radius: 17px;
+  background: #19191e;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  min-width: 0;
+
+  strong {
+    font-size: 16px;
+  }
+
+  > span:not(.demo-label) {
+    color: #85858e;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+  }
+}
+
+.demo-label {
+  display: inline-flex;
+  padding: 4px 9px;
+  border-radius: 6px;
+  background: #fce8ed;
+  color: #c4163c;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.settings-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 19px 0;
+  border-bottom: 1px solid #f0f0f3;
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+}
+
+.item-description {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+
+  strong {
+    color: #292932;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  span {
+    color: #92929b;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+}
+
+.status-tag {
+  flex-shrink: 0;
+  padding: 7px 11px;
+  border-radius: 7px;
+  background: #f2f2f5;
+  color: #898994;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.settings-select {
+  width: 195px;
+  max-width: 100%;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid #e3e3e9;
+  border-radius: 9px;
+  outline: none;
+  background: #fafafb;
+  color: #292932;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:focus {
+    border-color: #c4163c;
+    box-shadow: 0 0 0 3px rgba(196, 22, 60, 0.1);
+  }
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-flex;
+  width: 46px;
+  height: 26px;
+  flex-shrink: 0;
+  cursor: pointer;
+
+  input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+}
+
+.toggle-slider {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  background: #d6d6dd;
+  transition: background 0.2s;
+  pointer-events: none;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+    transition: transform 0.2s;
+  }
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background: #c4163c;
+
+  &::before {
+    transform: translateX(20px);
+  }
+}
+
+.toggle-switch input:focus-visible + .toggle-slider {
+  outline: 3px solid rgba(196, 22, 60, 0.35);
+  outline-offset: 3px;
+}
+
+.settings-note {
+  margin-top: 20px;
+  padding: 13px 16px;
+  border-radius: 9px;
+  background: #f7f7f9;
+  color: #92929b;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.account-access-card {
+  border-color: #f0dce1;
+}
+
+.signout-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 12px 0;
+}
+
+.signout-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-width: 125px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid #c4163c;
+  border-radius: 9px;
+  background: #c4163c;
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+
+  &:hover {
+    background: #a91132;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(196, 22, 60, 0.35);
+    outline-offset: 3px;
+  }
+}
+
+.settings-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e9e9ed;
+  color: #a0a0a9;
+  font-size: 11px;
+}
+
+@media (max-width: 768px) {
+  .settings-page {
+    padding: 25px 18px 36px;
+  }
+
+  .settings-card {
+    padding: 22px 18px;
+    border-radius: 14px;
+  }
+
+  .settings-header {
+    margin-bottom: 25px;
+  }
+
+  .section-heading {
+    gap: 12px;
+  }
+
+  .section-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .settings-item {
+    gap: 14px;
+  }
+
+  .settings-select {
+    width: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .settings-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .settings-select {
+    width: 100%;
+  }
+
+  .status-tag {
+    align-self: flex-start;
+  }
+
+  .toggle-switch {
+    align-self: flex-start;
+  }
+
+  .signout-content {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .signout-button {
+    width: 100%;
+  }
+
+  .profile-overview {
+    padding: 16px;
+  }
+
+  .settings-footer {
+    flex-direction: column;
+    gap: 6px;
+  }
+}

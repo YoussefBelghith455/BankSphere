@@ -1,28 +1,38 @@
 
 <section class="accounts-page">
   <header class="accounts-header">
-    <span class="eyebrow">YOUR BANKING</span>
-    <h1>My Accounts.</h1>
-    <p>Your money, all in one place.</p>
+    <span class="eyebrow">
+      {{ translation.translate('common.yourBanking') }}
+    </span>
+
+    <h1>{{ translation.translate('accounts.title') }}</h1>
+    <p>{{ translation.translate('accounts.subtitle') }}</p>
   </header>
 
   <section class="balance-overview">
     <div class="balance-overview-top">
-      <span>TOTAL BALANCE</span>
+      <span>{{ translation.translate('common.totalBalance') }}</span>
       <span class="brand-label">BANKSPHERE</span>
     </div>
 
-    <h2>{{ totalBalance() | currency:'EUR' }}</h2>
+    <h2>{{ currency.format(totalBalance()) }}</h2>
 
     <div class="balance-accent"></div>
 
-    <p>Across {{ accounts().length }} accounts</p>
+    <p>
+      {{ translation.translate('accounts.across') }}
+      {{ accounts().length }}
+      {{ translation.translate('accounts.accountsCount') }}
+    </p>
   </section>
 
   <section class="accounts-section">
     <div class="accounts-section-header">
-      <h2>Your accounts</h2>
-      <span>{{ accounts().length }} accounts</span>
+      <h2>{{ translation.translate('accounts.yourAccounts') }}</h2>
+      <span>
+        {{ accounts().length }}
+        {{ translation.translate('accounts.accountsCount') }}
+      </span>
     </div>
 
     <div class="accounts-list">
@@ -59,26 +69,37 @@
                   [class.status-frozen]="account.status === 'frozen'"
                 >
                   <span class="status-dot"></span>
-                  {{ account.status }}
+
+                  @switch (account.status) {
+                    @case ('active') {
+                      {{ translation.translate('common.active') }}
+                    }
+                    @case ('inactive') {
+                      {{ translation.translate('common.inactive') }}
+                    }
+                    @case ('frozen') {
+                      {{ translation.translate('common.frozen') }}
+                    }
+                  }
                 </span>
               </div>
 
               <span class="account-amount">
-                {{ account.balance | currency:account.currency }}
+                {{ currency.format(account.balance) }}
               </span>
             </div>
 
             <div class="account-card-footer">
               <span>
                 {{ account.type === 'checking'
-                  ? 'Everyday banking'
-                  : 'Your savings' }}
+                  ? translation.translate('accounts.everydayBanking')
+                  : translation.translate('accounts.yourSavings') }}
               </span>
 
               <span>
                 {{ expandedAccountIds.has(account.id)
-                  ? 'Hide details'
-                  : 'View details' }}
+                  ? translation.translate('accounts.hideDetails')
+                  : translation.translate('accounts.viewDetails') }}
               </span>
             </div>
           </button>
@@ -86,12 +107,17 @@
           @if (expandedAccountIds.has(account.id)) {
             <div class="account-expanded">
               <div class="account-detail">
-                <span>Account type</span>
-                <strong>{{ account.type }}</strong>
+                <span>{{ translation.translate('accounts.accountType') }}</span>
+
+                <strong>
+                  {{ account.type === 'checking'
+                    ? translation.translate('accounts.everydayBanking')
+                    : translation.translate('accounts.yourSavings') }}
+                </strong>
               </div>
 
               <div class="account-detail">
-                <span>Currency</span>
+                <span>{{ translation.translate('accounts.accountCurrency') }}</span>
                 <strong>{{ account.currency }}</strong>
               </div>
 
@@ -105,9 +131,11 @@
                     type="button"
                     class="copy-iban-btn"
                     (click)="copyIban(account.id, account.iban)"
-                    [attr.aria-label]="'Copy IBAN for ' + account.name"
+                    [attr.aria-label]="translation.translate('accounts.copyIban') + ' ' + account.name"
                   >
-                    {{ copiedAccountId === account.id ? '✓ Copied!' : 'Copy IBAN' }}
+                    {{ copiedAccountId === account.id
+                      ? translation.translate('accounts.copied')
+                      : translation.translate('accounts.copyIban') }}
                   </button>
                 </div>
               </div>
@@ -115,15 +143,15 @@
           }
         </article>
       } @empty {
-        <p>No accounts available.</p>
+        <p>{{ translation.translate('accounts.noAccounts') }}</p>
       }
     </div>
   </section>
 
   <section class="distribution-section">
     <div class="distribution-header">
-      <h2>Balance Distribution</h2>
-      <p>How your money is distributed across accounts.</p>
+      <h2>{{ translation.translate('accounts.distribution') }}</h2>
+      <p>{{ translation.translate('accounts.distributionSubtitle') }}</p>
     </div>
 
     <div class="distribution-card">
@@ -141,16 +169,17 @@
           (mouseleave)="onDonutMouseLeave()"
           role="img"
           [attr.aria-label]="
-            'Checking ' +
+            accounts()[0].name + ' ' +
             getAccountPercentage(accounts()[0].balance).toFixed(1) +
-            ' percent, Savings ' +
+            '%, ' +
+            accounts()[1].name + ' ' +
             getAccountPercentage(accounts()[1].balance).toFixed(1) +
-            ' percent'
+            '%'
           "
         >
           <div class="donut-center">
-            <span>Total Balance</span>
-            <strong>{{ totalBalance() | currency:'EUR' }}</strong>
+            <span>{{ translation.translate('common.totalBalance') }}</span>
+            <strong>{{ currency.format(totalBalance()) }}</strong>
           </div>
 
           @if (hoveredAccount) {
@@ -158,19 +187,19 @@
               <strong>{{ hoveredAccount.name }}</strong>
 
               <span class="tooltip-balance">
-                {{ hoveredAccount.balance | currency:hoveredAccount.currency }}
+                {{ currency.format(hoveredAccount.balance) }}
               </span>
 
               <span class="tooltip-percentage">
                 {{ getAccountPercentage(hoveredAccount.balance).toFixed(1) }}%
-                of total balance
+                {{ translation.translate('accounts.ofTotalBalance') }}
               </span>
             </div>
           }
         </div>
       } @else {
         <div class="distribution-empty">
-          Distribution chart available for two accounts with a positive total balance.
+          {{ translation.translate('accounts.distributionEmpty') }}
         </div>
       }
 
@@ -192,11 +221,11 @@
             </strong>
 
             <span class="legend-balance">
-              {{ account.balance | currency:account.currency }}
+              {{ currency.format(account.balance) }}
             </span>
           </div>
         } @empty {
-          <p>No accounts available.</p>
+          <p>{{ translation.translate('accounts.noAccounts') }}</p>
         }
       </div>
     </div>

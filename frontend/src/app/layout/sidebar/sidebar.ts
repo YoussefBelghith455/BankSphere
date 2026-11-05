@@ -1,6 +1,7 @@
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Translation } from '../../core/services/translation';
 
 @Component({
   selector: 'app-sidebar',
@@ -8,4 +9,6 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss'
 })
-export class Sidebar {}
+export class Sidebar {
+  readonly translation = inject(Translation);
+}

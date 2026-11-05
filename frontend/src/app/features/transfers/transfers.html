@@ -1,9 +1,12 @@
 
 <section class="transfers-page">
   <header class="transfers-header">
-    <span class="eyebrow">YOUR BANKING</span>
-    <h1>New Transfer.</h1>
-    <p>Move money securely and easily.</p>
+    <span class="eyebrow">
+      {{ translation.translate('common.yourBanking') }}
+    </span>
+
+    <h1>{{ translation.translate('transfers.title') }}</h1>
+    <p>{{ translation.translate('transfers.subtitle') }}</p>
   </header>
 
   <div class="transfer-layout">
@@ -13,12 +16,14 @@
       (ngSubmit)="submitTransfer()"
     >
       <div class="card-heading">
-        <h2>Transfer Details</h2>
-        <p>Enter the information below to prepare your transfer.</p>
+        <h2>{{ translation.translate('transfers.details') }}</h2>
+        <p>{{ translation.translate('transfers.detailsSubtitle') }}</p>
       </div>
 
       <div class="form-group">
-        <label for="sourceAccount">From account</label>
+        <label for="sourceAccount">
+          {{ translation.translate('transfers.fromAccount') }}
+        </label>
 
         <select
           id="sourceAccount"
@@ -27,25 +32,27 @@
           @for (account of accounts(); track account.id) {
             <option [value]="account.id">
               {{ account.name }} —
-              {{ account.balance | currency:'EUR' }}
+              {{ currency.format(account.balance) }}
             </option>
           }
         </select>
 
         <span class="field-hint">
-          Available balance:
-          {{ (selectedAccount?.balance ?? 0) | currency:'EUR' }}
+          {{ translation.translate('transfers.availableBalance') }}:
+          {{ currency.format(selectedAccount?.balance ?? 0) }}
         </span>
       </div>
 
       <div class="form-group">
-        <label for="recipientName">Recipient name</label>
+        <label for="recipientName">
+          {{ translation.translate('transfers.recipientName') }}
+        </label>
 
         <input
           id="recipientName"
           type="text"
           formControlName="recipientName"
-          placeholder="Full name of recipient"
+          [placeholder]="translation.translate('transfers.recipientPlaceholder')"
         />
 
         @if (
@@ -53,19 +60,21 @@
           transferForm.controls.recipientName.invalid
         ) {
           <span class="field-error">
-            Recipient name is required.
+            {{ translation.translate('transfers.recipientRequired') }}
           </span>
         }
       </div>
 
       <div class="form-group">
-        <label for="recipientIban">Recipient IBAN</label>
+        <label for="recipientIban">
+          {{ translation.translate('transfers.recipientIban') }}
+        </label>
 
         <input
           id="recipientIban"
           type="text"
           formControlName="recipientIban"
-          placeholder="PT50000000000000000000000"
+          placeholder="PT50000201231234567890154"
         />
 
         @if (
@@ -73,16 +82,19 @@
           transferForm.controls.recipientIban.invalid
         ) {
           <span class="field-error">
-            Enter a valid IBAN without spaces.
+            {{ translation.translate('transfers.invalidIban') }}
           </span>
         }
       </div>
 
       <div class="form-group">
-        <label for="amount">Amount</label>
+        <label for="amount">
+          {{ translation.translate('common.amount') }}
+          ({{ currency.selectedCurrency() }})
+        </label>
 
         <div class="amount-input">
-          <span>€</span>
+          <span>{{ currency.selectedCurrency() }}</span>
 
           <input
             id="amount"
@@ -93,7 +105,7 @@
             step="0.01"
           />
 
-          <span>EUR</span>
+          <span>{{ currency.selectedCurrency() }}</span>
         </div>
 
         @if (
@@ -101,24 +113,26 @@
           transferForm.controls.amount.invalid
         ) {
           <span class="field-error">
-            Enter an amount greater than zero.
+            {{ translation.translate('transfers.invalidAmount') }}
           </span>
         }
 
         @if (hasInsufficientBalance) {
           <span class="field-error">
-            Insufficient balance in the selected account.
+            {{ translation.translate('transfers.insufficientBalance') }}
           </span>
         }
       </div>
 
       <div class="form-group">
-        <label for="description">Description (optional)</label>
+        <label for="description">
+          {{ translation.translate('transfers.description') }}
+        </label>
 
         <textarea
           id="description"
           formControlName="description"
-          placeholder="What is this transfer for?"
+          [placeholder]="translation.translate('transfers.descriptionPlaceholder')"
           rows="3"
           maxlength="140"
         ></textarea>
@@ -131,57 +145,56 @@
       }
 
       <button type="submit" class="primary-button">
-        Validate Transfer
+        {{ translation.translate('transfers.validate') }}
       </button>
     </form>
 
     <aside class="transfer-summary">
       <div class="summary-heading">
-        <span>TRANSFER OVERVIEW</span>
-        <h2>Your transfer</h2>
+        <span>
+          {{ translation.translate('transfers.overview') }}
+        </span>
+        <h2>
+          {{ translation.translate('transfers.yourTransfer') }}
+        </h2>
       </div>
 
       <div class="summary-row">
-        <span>From</span>
+        <span>{{ translation.translate('common.from') }}</span>
         <strong>
-          {{ selectedAccount?.name ?? 'Select an account' }}
+          {{
+            selectedAccount?.name ||
+            translation.translate('transfers.selectAccount')
+          }}
         </strong>
       </div>
 
       <div class="summary-row">
-        <span>Recipient</span>
+        <span>{{ translation.translate('common.recipient') }}</span>
         <strong>
           {{
             transferForm.controls.recipientName.value ||
-            'Not specified'
+            translation.translate('transfers.notSpecified')
           }}
         </strong>
       </div>
 
       <div class="summary-row">
-        <span>Amount</span>
-        <strong>
-          {{
-            (transferForm.controls.amount.value ?? 0)
-              | currency:'EUR'
-          }}
-        </strong>
+        <span>{{ translation.translate('common.amount') }}</span>
+        <strong>{{ formattedTransferAmount }}</strong>
       </div>
 
       <div class="summary-divider"></div>
 
       <div class="summary-total">
-        <span>Total transfer</span>
-        <strong>
-          {{
-            (transferForm.controls.amount.value ?? 0)
-              | currency:'EUR'
-          }}
-        </strong>
+        <span>
+          {{ translation.translate('transfers.totalTransfer') }}
+        </span>
+        <strong>{{ formattedTransferAmount }}</strong>
       </div>
 
       <p class="summary-note">
-        This is a demonstration. No real money will be transferred.
+        {{ translation.translate('transfers.demoNote') }}
       </p>
     </aside>
   </div>
@@ -218,39 +231,34 @@
 
       <div class="success-content">
         <span class="success-label">
-          TRANSFER CONFIRMED
+          {{ translation.translate('transfers.confirmed') }}
         </span>
 
         <h2 id="successTitle">
-          Transfer Successful!
+          {{ translation.translate('transfers.successful') }}
         </h2>
 
         <p id="successDescription">
-          Your simulated transfer has been completed successfully.
+          {{ translation.translate('transfers.successDescription') }}
         </p>
 
         <div class="success-details">
           <div class="detail-row">
-            <span>Recipient</span>
-            <strong>
-              {{ transferForm.controls.recipientName.value }}
-            </strong>
+            <span>
+              {{ translation.translate('common.recipient') }}
+            </span>
+            <strong>{{ confirmedRecipient }}</strong>
           </div>
 
           <div class="detail-row">
-            <span>From</span>
-            <strong>
-              {{ selectedAccount?.name }}
-            </strong>
+            <span>{{ translation.translate('common.from') }}</span>
+            <strong>{{ confirmedSourceAccount }}</strong>
           </div>
 
           <div class="detail-row">
-            <span>Amount</span>
+            <span>{{ translation.translate('common.amount') }}</span>
             <strong class="success-amount">
-              {{
-                (transferForm.controls.amount.value ?? 0)
-                  | currency:'EUR'
-              }}
+              {{ formattedConfirmedAmount }}
             </strong>
           </div>
         </div>
@@ -260,7 +268,7 @@
           class="primary-button done-button"
           (click)="closeSuccessModal()"
         >
-          Done
+          {{ translation.translate('common.done') }}
         </button>
       </div>
     </div>
